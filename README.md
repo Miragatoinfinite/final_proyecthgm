@@ -1,1 +1,2 @@
-# Repository for final project
+Final project
+https://github.com/nekosukeno-hub/final/blob/main/README.md
