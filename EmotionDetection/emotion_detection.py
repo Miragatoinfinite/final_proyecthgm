@@ -7,17 +7,21 @@ def emotion_detector(text_to_analyse):  # Define a function named sentiment_anal
     header= {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"}
     myobj= { "raw_document": { "text": text_to_analyse } }
     response = requests.post(url, json = myobj, headers=header)  # Send a POST request to the API with the text and headers
-    formatted_response = response.json()
-    emotions = formatted_response["emotionPredictions"][0]["emotion"]
     rp={}
-    # Find the emotion with the highest score
-    dominant_emotion = max(emotions, key=emotions.get)
+    if response.status_code == 200:
+        formatted_response = response.json()
+        emotions = formatted_response["emotionPredictions"][0]["emotion"]
+        # Find the emotion with the highest score
+        dominant_emotion = max(emotions, key=emotions.get)
 
-    for emotion, score in emotions.items():
-        rp[emotion] = score
+        for emotion, score in emotions.items():
+            rp[emotion] = score
 
-    dominant_emotion = max(emotions, key=emotions.get)
-    rp['dominant_emotion']=dominant_emotion
-    
+        dominant_emotion = max(emotions, key=emotions.get)
+        rp['dominant_emotion']=dominant_emotion
+    elif response.status_code == 500:
+        rp['dominant_emotion']= None
+    else:
+        rp['dominant_emotion']= None
     return rp  # Return the response text from the API
     
